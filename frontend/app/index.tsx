@@ -1,15 +1,14 @@
-import { Text, View } from "react-native";
+import React from 'react';
+import { StatusBar } from 'react-native';
+import Layout from './_layout';
 
-export default function Index() {
+const App = () => {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-    </View>
+    <>
+      <StatusBar barStyle="dark-content" />
+      <Layout />
+    </>
   );
-}
+};
+
+export default App;
