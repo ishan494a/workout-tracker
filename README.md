@@ -19,9 +19,11 @@ This is a mobile app for **iOS** and **Android** built to provide users with the
 
 ### 1. **User Registration and Authentication**
 - Implemented user registration functionality with input validation for fields such as `username`, `email`, and `password`.
-- Registration form provides feedback to the user based on successful or failed attempts.
 - Passwords are securely hashed using `bcrypt` to ensure sensitive data is protected.
 - Utilized Express.js to handle API requests and manage user data.
+<img src="https://github.com/user-attachments/assets/c29b0198-a7e3-4f43-9d40-0663448e9780" width="300" />
+<img src="https://github.com/user-attachments/assets/99374436-c793-4985-9954-48cc3b030a57" width="300" />
+<img src="https://github.com/user-attachments/assets/a909f46b-ed8f-4a94-92d0-2f3698297836" width="300" />
 
 ### 2. **Backend API Integration**
 - The app sends user registration and login data to a PostgreSQL database, ensuring that user credentials are stored securely after bcrypt hashing.
