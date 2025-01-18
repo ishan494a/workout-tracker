@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, TextInput, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 type RootStackParamList = {
@@ -45,54 +44,47 @@ const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <LinearGradient
-      colors={['rgba(4,2,37,1)', 'rgba(0,0,0,1)', 'rgb(4, 4, 67)', 'rgb(8, 0, 41)']}
-      style={styles.gradient}
-    >
-      <View style={styles.container}>
-        {errorMessage ? (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>{errorMessage}</Text>
-          </View>
-        ) : null}
-        <Text style={styles.title}>🛠️ Forgot Password</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter your email"
-          value={email}
-          onChangeText={setEmail}
-          placeholderTextColor="rgba(255,255,255,0.7)"
-        />
-        <TouchableOpacity style={styles.button} onPress={handleForgotPassword} disabled={isLoading}>
-          {isLoading ? (
-            <ActivityIndicator size="small" color="#000" />
-          ) : (
-            <Text style={styles.buttonText}>Send Reset Link</Text>
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => {
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'Login' }],
-            });
-          }}
-        >
-          <Text style={styles.backText}>Back to login</Text>
-        </TouchableOpacity>
-      </View>
-    </LinearGradient>
+    <View style={styles.container}>
+      {errorMessage ? (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        </View>
+      ) : null}
+      <Text style={styles.title}>🛠️ Forgot Password</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter your email"
+        value={email}
+        onChangeText={setEmail}
+        placeholderTextColor="rgba(255,255,255,0.7)"
+      />
+      <TouchableOpacity style={styles.button} onPress={handleForgotPassword} disabled={isLoading}>
+        {isLoading ? (
+          <ActivityIndicator size="small" color="#000" />
+        ) : (
+          <Text style={styles.buttonText}>Send Reset Link</Text>
+        )}
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Login' }],
+          });
+        }}
+      >
+        <Text style={styles.backText}>Back to login</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-  },
   container: {
     flex: 1,
     justifyContent: 'center',
+    backgroundColor: 'black', // Set background to black
     paddingHorizontal: 20,
   },
   title: {

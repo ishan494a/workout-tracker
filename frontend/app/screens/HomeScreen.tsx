@@ -1,28 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { MaterialIcons } from '@expo/vector-icons'; // For tab icons
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
-import { StackNavigationProp } from '@react-navigation/stack';
 
-type RootStackParamList = {
-  Login: undefined;
-  HomeScreen: undefined;
-  Register: undefined;
-  ForgotPassword: undefined;
-};
-type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
-interface Props {
-  navigation: HomeScreenNavigationProp;
-}
-const HomeScreen: React.FC<Props> = ({ navigation }) => {
-  const [isLoading, setIsLoading] = useState(false);
+const ProfileScreen = ({ navigation }) => {
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const handleLogout = async () => {
     setIsLoading(true);
-
     try {
       await AsyncStorage.removeItem('jwt_token');
-
       setTimeout(() => {
         navigation.reset({
           index: 0,
@@ -36,58 +24,87 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <LinearGradient
-      colors={['rgba(4,2,37,1)', 'rgba(0,0,0,1)', 'rgb(4, 4, 67)', 'rgb(8, 0, 41)']}
-      style={styles.gradient}
-    >
-      <View style={styles.container}>
-        <Text style={styles.welcomeText}>Welcome to the App! 🎉</Text>
-        <Text style={styles.infoText}>You're logged in. Enjoy your workout journey!</Text>
+    <View style={styles.screen}>
+      <Text style={styles.screenText}>Profile Page</Text>
+      <TouchableOpacity style={styles.button} onPress={handleLogout} disabled={isLoading}>
+        {isLoading ? (
+          <ActivityIndicator size="small" color="#000" />
+        ) : (
+          <Text style={styles.buttonText}>Logout</Text>
+        )}
+      </TouchableOpacity>
+    </View>
+  );
+};
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleLogout}
-          disabled={isLoading} // Disable the button while loading
-        >
-          {isLoading ? (
-            <ActivityIndicator size="small" color="#000" />
-          ) : (
-            <Text style={styles.buttonText}>Logout</Text>
-          )}
-        </TouchableOpacity>
-      </View>
-    </LinearGradient>
+const LogScreen = () => (
+  <View style={styles.screen}>
+    <Text style={styles.screenText}>Log Page</Text>
+  </View>
+);
+
+const StatsScreen = () => (
+  <View style={styles.screen}>
+    <Text style={styles.screenText}>Stats Page</Text>
+  </View>
+);
+
+// Bottom Tab Navigator
+const Tab = createBottomTabNavigator();
+
+const HomeScreen = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, size }) => {
+          let iconName : 'person' | 'event' | 'bar-chart' = 'person';
+          if (route.name === 'Profile') {
+            iconName = 'person';
+          } else if (route.name === 'Log') {
+            iconName = 'event';
+          } else if (route.name === 'Stats') {
+            iconName = 'bar-chart';
+          }
+          return <MaterialIcons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: 'rgb(0, 213, 255)',
+        tabBarInactiveTintColor: 'white',           
+        tabBarStyle: {
+          backgroundColor: 'rgb(1, 6, 15)',
+          paddingBottom: 10,
+          borderTopWidth: 0,
+          shadowOpacity: 0.3,
+        }, 
+        headerShown: false,
+      })}
+    >
+      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Log" component={LogScreen} />
+      <Tab.Screen name="Stats" component={StatsScreen} />
+    </Tab.Navigator>
   );
 };
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-  },
-  container: {
+  screen: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 20,
+    backgroundColor: 'rgb(0, 0, 0)', // Solid background color
   },
-  welcomeText: {
-    fontSize: 28,
+  screenText: {
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
     textAlign: 'center',
-    marginBottom: 20,
-  },
-  infoText: {
-    fontSize: 18,
-    color: '#fff',
-    textAlign: 'center',
-    marginBottom: 40,
   },
   button: {
     backgroundColor: 'rgba(0,212,255,1)',
     paddingVertical: 15,
+    marginRight: 20,
+    marginLeft: 20,
     borderRadius: 8,
     alignItems: 'center',
-    marginBottom: 15,
+    marginTop: 30,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,

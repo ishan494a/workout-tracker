@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import Validator from '../utils/Validator.js'; // Assuming Validator.js is set up correctly
+import Validator from '../utils/Validator';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 type RootStackParamList = {
@@ -63,75 +62,70 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <LinearGradient
-      colors={['rgba(4,2,37,1)', 'rgba(0,0,0,1)', 'rgb(4, 4, 67)', 'rgb(8, 0, 41)']}
-      style={styles.gradient}
-    >
-      <View style={styles.container}>
-        <Text style={styles.title}>✍️ Register</Text>
-        {successMessage ? (
-          <>
-            <View style={styles.successContainer}>
-              <Text style={styles.successText}>{successMessage}</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>✍️ Register</Text>
+      {successMessage ? (
+        <>
+          <View style={styles.successContainer}>
+            <Text style={styles.successText}>{successMessage}</Text>
+          </View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('Login')}
+          >
+            <Text style={styles.buttonText}>Back to Login</Text>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <>
+          {errorMessage ? (
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>{errorMessage}</Text>
             </View>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => navigation.navigate('Login')}
-            >
-              <Text style={styles.buttonText}>Back to Login</Text>
-            </TouchableOpacity>
-          </>
-        ) : (
-          <>
-            {errorMessage ? (
-              <View style={styles.errorContainer}>
-                <Text style={styles.errorText}>{errorMessage}</Text>
-              </View>
-            ) : null}
-            <TextInput
-              style={styles.input}
-              placeholder="Username"
-              value={username}
-              onChangeText={setUsername}
-              placeholderTextColor="rgba(255,255,255,0.7)"
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              value={email}
-              onChangeText={setEmail}
-              placeholderTextColor="rgba(255,255,255,0.7)"
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              secureTextEntry
-              value={password}
-              onChangeText={setPassword}
-              placeholderTextColor="rgba(255,255,255,0.7)"
-            />
-            <TouchableOpacity style={styles.button} onPress={handleRegister} disabled={isLoading}>
-              {isLoading ? (
-                <ActivityIndicator size="small" color="#000" />
-              ) : (
-                <Text style={styles.buttonText}>Register</Text>
-              )}
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.loginButton}
-              onPress={() => {
-                navigation.reset({
-                  index: 0,
-                  routes: [{ name: 'Login' }],
-                });
-              }}
-            >
-              <Text style={styles.loginText}>Already have an account? Login</Text>
-            </TouchableOpacity>
-          </>
-        )}
-      </View>
-    </LinearGradient>
+          ) : null}
+          <TextInput
+            style={styles.input}
+            placeholder="Username"
+            value={username}
+            onChangeText={setUsername}
+            placeholderTextColor="rgba(255,255,255,0.7)"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            placeholderTextColor="rgba(255,255,255,0.7)"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+            placeholderTextColor="rgba(255,255,255,0.7)"
+          />
+          <TouchableOpacity style={styles.button} onPress={handleRegister} disabled={isLoading}>
+            {isLoading ? (
+              <ActivityIndicator size="small" color="#000" />
+            ) : (
+              <Text style={styles.buttonText}>Register</Text>
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.loginButton}
+            onPress={() => {
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+              });
+            }}
+          >
+            <Text style={styles.loginText}>Already have an account? Login</Text>
+          </TouchableOpacity>
+        </>
+      )}
+    </View>
   );
 };
 
@@ -144,13 +138,11 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     letterSpacing: 1.2,
   },
-  gradient: {
-    flex: 1,
-  },
   container: {
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
+    backgroundColor: 'black', // Solid black background
   },
   input: {
     height: 55,

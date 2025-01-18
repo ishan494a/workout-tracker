@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, TextInput, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Validator from '../utils/Validator.js';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -15,6 +14,7 @@ type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'
 interface Props {
   navigation: LoginScreenNavigationProp;
 }
+
 const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -60,58 +60,53 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <LinearGradient
-      colors={['rgba(4,2,37,1)', 'rgba(0,0,0,1)', 'rgb(4, 4, 67)', 'rgb(8, 0, 41)']}
-      style={styles.gradient}
-    >
-      <View style={styles.container}>
-        <Text style={styles.title}>🔑 Login</Text>
-        {errorMessage ? (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>{errorMessage}</Text>
-          </View>
-        ) : null}
-        <TextInput
-          style={styles.input}
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
-          placeholderTextColor="rgba(255,255,255,0.7)"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-          placeholderTextColor="rgba(255,255,255,0.7)"
-        />
-        <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={isLoading}>
-          {isLoading ? (
-            <ActivityIndicator size="small" color="#000" />
-          ) : (
-            <Text style={styles.buttonText}>Login</Text>
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.registerButton}
-          onPress={() => navigation.navigate('ForgotPassword')}
-        >
-          <Text style={styles.registerText}>Forgot your password?</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.registerButton}
-          onPress={() => {
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'Register' }],
-            });
-          }}
-        >
-          <Text style={styles.registerText}>Don't have an account? Register</Text>
-        </TouchableOpacity>
-      </View>
-    </LinearGradient>
+    <View style={styles.container}>
+      <Text style={styles.title}>🔑 Login</Text>
+      {errorMessage ? (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        </View>
+      ) : null}
+      <TextInput
+        style={styles.input}
+        placeholder="Username"
+        value={username}
+        onChangeText={setUsername}
+        placeholderTextColor="rgba(255,255,255,0.7)"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        secureTextEntry
+        value={password}
+        onChangeText={setPassword}
+        placeholderTextColor="rgba(255,255,255,0.7)"
+      />
+      <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={isLoading}>
+        {isLoading ? (
+          <ActivityIndicator size="small" color="#000" />
+        ) : (
+          <Text style={styles.buttonText}>Login</Text>
+        )}
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.registerButton}
+        onPress={() => navigation.navigate('ForgotPassword')}
+      >
+        <Text style={styles.registerText}>Forgot your password?</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.registerButton}
+        onPress={() => {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Register' }],
+          });
+        }}
+      >
+        <Text style={styles.registerText}>Don't have an account? Register</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -124,12 +119,10 @@ const styles = StyleSheet.create({
     marginBottom: 40,     
     letterSpacing: 1.2,   
   },
-  gradient: {
-    flex: 1,
-  },
   container: {
     flex: 1,
     justifyContent: 'center',
+    backgroundColor: '#000', // Solid black background
     paddingHorizontal: 20,
   },
   input: {
