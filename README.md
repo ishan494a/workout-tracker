@@ -13,6 +13,7 @@ This is a mobile app for **iOS** and **Android** built to provide users with the
 - **Node.js**
 - **Express.js**
 - **PostgreSQL**
+- **MongoDB**
 - **bcrypt** (for password hashing)
 
 ## Features Implemented
