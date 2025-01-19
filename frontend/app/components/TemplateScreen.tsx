@@ -1,5 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect } from 'react';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import WorkoutScreen from '../screens/WorkoutScreen';
 import {
   View,
   Text,
@@ -8,19 +10,27 @@ import {
   SafeAreaView,
   TextInput,
   Modal,
-  Button,
   Image,
   ScrollView,
 } from 'react-native';
-
-const TemplateScreen = () => {
+const TemplateScreen: React.FC<any> = ({ navigation }) => {
   const [exerciseList, setExerciseList] = useState<{ name: string; gifUrl: string }[]>([]);
-  const [templateList, setTemplateList] = useState<any[]>([]); // Store templates here
+  const [templateList, setTemplateList] = useState<any[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [templateModalVisible, setTemplateModalVisible] = useState(false);
+  const [addWorkoutModalVisible, setAddWorkoutModalBVisible] = useState(false);
   const [templateName, setTemplateName] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [exercises, setExercises] = useState<any[]>([]);
+  const [template, setTemplate] = useState<any[]>([]);
+  const [workouts, setWorkouts] = useState<any[]>([]);
   const [addedExercises, setAddedExercises] = useState<any[]>([]); 
+  
+  const handleStartWorkout = () => {
+    setTemplateModalVisible(false);
+    navigation.navigate('Workout', { template }); 
+  };
+
 
   // Function to fetch templates from AsyncStorage
   const fetchExercise = async () => {
@@ -33,15 +43,62 @@ const TemplateScreen = () => {
       console.error('Error fetching templates from AsyncStorage:', error);
     }
   };
-  const renderTemplateCard = (template: any) => {
-    const handleTemplateClick = () => {
-      // Navigate to a workout page
+  function handleTemplateClick (template: any) {
+    setTemplate(template);
+    setWorkouts(template.workouts)
+    setTemplateModalVisible(true);
+  }
+  const handleCloseTemplateModal = () => {
+    setTemplate([]);
+    setWorkouts([]);
+    setTemplateModalVisible(false);
+  }
+  const handleDeleteExercise = async (templateId: any, exerciseId: any) => {
+    try {
+      const res = await fetch(`http://192.168.2.19:8080/templates/deleteworkout?id=${templateId}&workoutId=${exerciseId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${await AsyncStorage.getItem('jwt_token')}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      if (res.ok) {
+        setWorkouts(prevList => prevList.filter(workout => workout._id !== exerciseId));
+        fetchTemplates();
+      } else {
+        alert("Try Again");
+      }
+    } catch (err) {
+      console.error(err);
     }
+  };
+
+  
+  const handleDeleteTemplate = async () => {
+    try {
+      const res = await fetch(`http://192.168.2.19:8080/templates/deletetemplate?id=${template._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${await AsyncStorage.getItem('jwt_token')}`,
+          'Content-Type': 'application/json',
+        }});
+        if(res.ok){
+          setTemplateList(prevList => prevList.filter(t => t._id !== template._id));
+          setTemplateModalVisible(false);
+          fetchTemplates();
+        } else {
+          alert("Try Again")
+        }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  const renderTemplateCard = (template: any) => {
     return (
       <TouchableOpacity
         key={template._id}
         style={styles.card}
-        onPress={handleTemplateClick}
+        onPress={() => handleTemplateClick(template)}
       >
         <Text style={styles.cardTitle}>{template.name}</Text>
         <ScrollView style={styles.workoutList}>
@@ -106,7 +163,7 @@ const TemplateScreen = () => {
             equipment: exercise.equipment,
             gifUrl: exercise.gifUrl,
             id: exercise.id,
-            name: exercise.name.replace(/\b\w/g, (char) => char.toUpperCase()), // Capitalizing each word's first letter
+            name: exercise.name.replace(/\b\w/g, (char) => char.toUpperCase()),
             target: exercise.target,
             secondaryMuscles: exercise.secondaryMuscles,
           }));          
@@ -129,7 +186,9 @@ const TemplateScreen = () => {
       setAddedExercises([...addedExercises, exercise]);
     }
   };
-
+  const addWorkoutModal = () => {
+    console.log("adding")
+  } 
   const handleSaveTemplate = async () => {
     if (!templateName) {
       alert("Template Name Required!");
@@ -230,9 +289,7 @@ const TemplateScreen = () => {
                     style={[styles.addButton, addedExercises.some((addedExercise) => addedExercise.id === item.id) ? styles.addedButton : null]}
                     onPress={() => handleAddToTemplate(item)}
                   >
-                    <Text style={styles.addButtonText}>
-                      {addedExercises.some((addedExercise) => addedExercise.id === item.id) ? 'Added!' : 'Add to Template'}
-                    </Text>
+                  {addedExercises.some((addedExercise) => addedExercise.id === item.id) ? <MaterialCommunityIcons name="check" size={25} color="#fff" /> : <MaterialCommunityIcons name="plus" size={25} color="#fff" />}
                   </TouchableOpacity>
                 </View>
               ))}
@@ -240,11 +297,51 @@ const TemplateScreen = () => {
 
             <View style={styles.modalButtons}>
               <TouchableOpacity style={styles.saveButton} onPress={handleSaveTemplate}>
-                <Text style={styles.saveButtonText}>Save Template</Text>
+              <MaterialCommunityIcons name="content-save" size={25} color="#fff" />
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.closeButton} onPress={handleCloseModal}>
-                <Text style={styles.closeButtonText}>Close</Text>
+              <MaterialCommunityIcons name="close" size={25} color="#fff" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        visible={templateModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={handleCloseTemplateModal}
+      >
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>{template.name}</Text>
+            <ScrollView style={styles.modalExerciseList}>
+              {workouts.map((exercise, index) => (
+                <View key={exercise._id || index} style={styles.exerciseRow}>
+                  <Image source={{ uri: exercise.gifUrl }} style={styles.exerciseRowImage} />
+                  <Text style={styles.workoutText}>{exercise.name}</Text>
+                  <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => handleDeleteExercise(template._id ,exercise._id)}
+                  >
+                    <MaterialCommunityIcons name="trash-can" size={25} color="#fff" />
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </ScrollView>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity style={styles.saveButton} onPress={handleStartWorkout}>
+              <MaterialCommunityIcons name="play" size={25} color="#fff" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={handleDeleteTemplate}
+                  >
+                    <MaterialCommunityIcons name="trash-can" size={35} color="#fff" />
+                  </TouchableOpacity>
+              <TouchableOpacity style={styles.closeButton} onPress={handleCloseTemplateModal}>
+              <MaterialCommunityIcons name="close" size={25} color="#fff" />
               </TouchableOpacity>
             </View>
           </View>
@@ -257,6 +354,25 @@ const TemplateScreen = () => {
 export default TemplateScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f4f4f4',
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
+  startButton: {
+    backgroundColor: '#28a745',
+    padding: 12,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
   safeArea: {
     flex: 1,
     backgroundColor: 'rgb(0, 0, 0)',
@@ -306,11 +422,6 @@ const styles = StyleSheet.create({
   workoutList: {
     marginTop: 10,
   },
-  workoutText: {
-    color: '#fff',
-    fontSize: 16,
-    marginBottom: 5,
-  },
   modalBackground: {
     flex: 1,
     justifyContent: 'center',
@@ -351,7 +462,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   exerciseList: {
-    marginTop: 20,
+    marginBottom: 10,
     width: '100%',
     flexDirection: 'row',
     flexWrap: 'nowrap',
@@ -362,7 +473,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 10,
     marginRight: 10,
-    alignItems: 'center', // Aligning items within each exercise box
+    alignItems: 'center',
   },
   exerciseText: {
     color: '#fff',
@@ -375,15 +486,21 @@ const styles = StyleSheet.create({
     marginTop: 10,
     borderRadius: 8,
   },
-  addButton: {
-    backgroundColor: 'rgba(0,212,255,1)',
+  addWorkoutButton: {
+    backgroundColor: 'rgb(0, 119, 255)',
     paddingVertical: 8,
-    paddingHorizontal: 15,
+    paddingHorizontal: 40,
+    borderRadius: 8,
+  },
+  addButton: {
+    backgroundColor: 'rgb(0, 119, 255)',
+    paddingVertical: 8,
+    paddingHorizontal: 80,
     borderRadius: 8,
     marginTop: 10,
   },
   addedButton: {
-    backgroundColor: 'rgb(16, 189, 19)', // Green when added
+    backgroundColor: 'rgb(16, 189, 19)',
   },
   addButtonText: {
     color: '#000',
@@ -391,9 +508,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   modalButtons: {
-    marginTop: 20,
+    marginTop: 10,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     width: '100%',
   },
   saveButton: {
@@ -414,8 +531,49 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   closeButtonText: {
-    color: '#000',
+    color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
+  },
+  modalExerciseList: {
+    width: '100%',
+    maxHeight: 400,
+    marginTop: 10,
+    
+  },
+  exerciseRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    backgroundColor: 'rgba(133, 133, 133, 0.07)',
+    borderWidth: 2,
+    borderRadius: 8,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    marginBottom: 10,
+  },
+  exerciseRowImage: {
+    width: 40,
+    height: 40,
+    marginRight: 10,
+    borderRadius: 8,
+  },
+  workoutText: {
+    color: '#fff',
+    fontSize: 16,
+    flex: 1, 
+    marginRight: 10,
+  },
+  deleteButton: {
+    backgroundColor: 'rgba(255, 99, 71, 1)',
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+  },
+  deleteButtonText: {
+    color: '#000',
+    fontSize: 14,
     fontWeight: 'bold',
   },
 });

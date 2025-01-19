@@ -63,7 +63,51 @@ const viewExistingTemplates = async (req, res) => {
   }
 }
 
+const deleteTemplate = async (req, res) => {
+  const { id } = req.query; 
+  if (!id) {
+    return res.status(400).json({ message: 'Template ID is required' });
+  }
+  try {
+    const deletedTemplate = await Template.findByIdAndDelete(id);
+
+    if (!deletedTemplate) {
+      return res.status(404).json({ message: 'Template not found' });
+    }
+
+    return res.status(200).json({ message: 'Template deleted successfully' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Failed to delete template' });
+  }
+}
+
+const deleteWorkout = async (req, res) => {
+  const { id, workoutId } = req.query;
+  if (!id || !workoutId) {
+    return res.status(400).json({ message: 'Template ID and WorkoutID required' });
+  }
+
+  try {
+    const template = await Template.findById(id);
+    if (!template) {
+      return res.status(404).json({ message: 'Template not found' });
+    }
+
+    const updatedWorkouts = template.workouts.filter(workout => workout._id.toString() !== workoutId);
+
+    template.workouts = updatedWorkouts;
+    await template.save(); 
+    return res.status(200).json({ message: 'Workout deleted successfully' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Failed to delete workout' });
+  }
+};
+
+
 module.exports = {
   addTemplateController,
   searchExercise, viewExistingTemplates,
+  deleteTemplate, deleteWorkout
 }

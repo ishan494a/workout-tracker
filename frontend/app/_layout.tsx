@@ -4,6 +4,7 @@ import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import HomeScreen from './screens/HomeScreen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
+import WorkoutScreen from './screens/WorkoutScreen';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ const Layout = () => {
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
+      <Stack.Screen name="Workout" component={WorkoutScreen} />
     </Stack.Navigator>
   );
 };

@@ -73,7 +73,6 @@ const HomeScreen = () => {
       })}
     >
       <Tab.Screen name="Profile" component={ProfileScreen} />
-
       <Tab.Screen name="Template" component={TemplateScreen} />
       <Tab.Screen name="History" component={HistoryScreen} />
       <Tab.Screen name="Stats" component={StatsScreen} />
