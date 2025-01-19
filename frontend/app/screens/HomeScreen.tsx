@@ -3,9 +3,9 @@ import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'rea
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialIcons } from '@expo/vector-icons'; // For tab icons
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
-import LogScreen from '../components/LogScreen';
 import StatsScreen from '../components/StatsScreen';
 import HistoryScreen from '../components/HistoryScreen';
+import TemplateScreen from '../components/TemplateScreen';
 
 const ProfileScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = React.useState(false);
@@ -49,15 +49,15 @@ const HomeScreen = () => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
-          let iconName : 'person' | 'event' | 'bar-chart' | 'history' = 'person';
+          let iconName : 'person' | 'event' | 'bar-chart' | 'history' | 'add' = 'person';
           if (route.name === 'Profile') {
             iconName = 'person';
-          } else if (route.name === 'Log') {
-            iconName = 'event';
           } else if (route.name === 'Stats') {
             iconName = 'bar-chart';
           } else if (route.name === 'History'){
             iconName = 'history';
+          } else if (route.name === 'Template'){
+            iconName = 'add'
           }
           return <MaterialIcons name={iconName} size={size} color={color} />;
         },
@@ -73,7 +73,8 @@ const HomeScreen = () => {
       })}
     >
       <Tab.Screen name="Profile" component={ProfileScreen} />
-      <Tab.Screen name="Log" component={LogScreen} />
+
+      <Tab.Screen name="Template" component={TemplateScreen} />
       <Tab.Screen name="History" component={HistoryScreen} />
       <Tab.Screen name="Stats" component={StatsScreen} />
     </Tab.Navigator>
