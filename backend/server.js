@@ -14,7 +14,9 @@ app.use(express.json());
 
 app.use('/auth', authRoute);
 app.use('/templates', authMiddleware, (templateRoutes));
-
+app.get('/', (req, res) => {
+  return res.json({message: "Backend"});
+})
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
