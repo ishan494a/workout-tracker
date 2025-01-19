@@ -3,6 +3,9 @@ import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'rea
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialIcons } from '@expo/vector-icons'; // For tab icons
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import LogScreen from '../components/LogScreen';
+import StatsScreen from '../components/StatsScreen';
+import HistoryScreen from '../components/HistoryScreen';
 
 const ProfileScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = React.useState(false);
@@ -37,17 +40,6 @@ const ProfileScreen = ({ navigation }) => {
   );
 };
 
-const LogScreen = () => (
-  <View style={styles.screen}>
-    <Text style={styles.screenText}>Log Page</Text>
-  </View>
-);
-
-const StatsScreen = () => (
-  <View style={styles.screen}>
-    <Text style={styles.screenText}>Stats Page</Text>
-  </View>
-);
 
 // Bottom Tab Navigator
 const Tab = createBottomTabNavigator();
@@ -57,13 +49,15 @@ const HomeScreen = () => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
-          let iconName : 'person' | 'event' | 'bar-chart' = 'person';
+          let iconName : 'person' | 'event' | 'bar-chart' | 'history' = 'person';
           if (route.name === 'Profile') {
             iconName = 'person';
           } else if (route.name === 'Log') {
             iconName = 'event';
           } else if (route.name === 'Stats') {
             iconName = 'bar-chart';
+          } else if (route.name === 'History'){
+            iconName = 'history';
           }
           return <MaterialIcons name={iconName} size={size} color={color} />;
         },
@@ -80,6 +74,7 @@ const HomeScreen = () => {
     >
       <Tab.Screen name="Profile" component={ProfileScreen} />
       <Tab.Screen name="Log" component={LogScreen} />
+      <Tab.Screen name="History" component={HistoryScreen} />
       <Tab.Screen name="Stats" component={StatsScreen} />
     </Tab.Navigator>
   );
@@ -89,7 +84,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'rgb(0, 0, 0)', // Solid background color
+    backgroundColor: 'rgb(0, 0, 0)'
   },
   screenText: {
     fontSize: 24,
