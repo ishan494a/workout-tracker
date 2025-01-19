@@ -8,7 +8,7 @@ require('dotenv').config();
 const connectDB = require('./config/db.js');
 const app = express();
 
-connectDB();
+// connectDB();
 app.use(cors());
 app.use(express.json()); 
 
