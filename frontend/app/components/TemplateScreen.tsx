@@ -2,6 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import WorkoutScreen from '../screens/WorkoutScreen';
+import Constants from 'expo-constants';
+const BACKEND_URL = Constants.expoConfig.extra.BACKEND_URL;
 import {
   View,
   Text,
@@ -55,7 +57,7 @@ const TemplateScreen: React.FC<any> = ({ navigation }) => {
   }
   const handleDeleteExercise = async (templateId: any, exerciseId: any) => {
     try {
-      const res = await fetch(`http://192.168.2.19:8080/templates/deleteworkout?id=${templateId}&workoutId=${exerciseId}`, {
+      const res = await fetch(`${BACKEND_URL}/templates/deleteworkout?id=${templateId}&workoutId=${exerciseId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${await AsyncStorage.getItem('jwt_token')}`,
@@ -76,7 +78,7 @@ const TemplateScreen: React.FC<any> = ({ navigation }) => {
   
   const handleDeleteTemplate = async () => {
     try {
-      const res = await fetch(`http://192.168.2.19:8080/templates/deletetemplate?id=${template._id}`, {
+      const res = await fetch(`${BACKEND_URL}/templates/deletetemplate?id=${template._id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${await AsyncStorage.getItem('jwt_token')}`,
@@ -119,7 +121,7 @@ const TemplateScreen: React.FC<any> = ({ navigation }) => {
   // Fetch existing templates from the backend
   const fetchTemplates = async () => {
     try {
-      const res = await fetch('http://192.168.2.19:8080/templates/existingtemplates', {
+      const res = await fetch(`${BACKEND_URL}/templates/existingtemplates`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${await AsyncStorage.getItem('jwt_token')}`,
@@ -149,7 +151,7 @@ const TemplateScreen: React.FC<any> = ({ navigation }) => {
     const query = searchQuery.toLowerCase();
     if (query) {
       try {
-        const res = await fetch(`http://192.168.2.19:8080/templates/search?query=${query}`, {
+        const res = await fetch(`${BACKEND_URL}/templates/search?query=${query}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${await AsyncStorage.getItem('jwt_token')}`,
@@ -208,7 +210,7 @@ const TemplateScreen: React.FC<any> = ({ navigation }) => {
   
     // Call the backend to store in MongoDB
     try {
-      const res = await fetch(`http://192.168.2.19:8080/templates/addTemplate`, {
+      const res = await fetch(`${BACKEND_URL}/templates/addTemplate`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${await AsyncStorage.getItem('jwt_token')}`,

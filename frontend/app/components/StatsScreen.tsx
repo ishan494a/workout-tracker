@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet  } from 'react-native';
-
+import Constants from 'expo-constants';
+const BACKEND_URL = Constants.expoConfig.extra.BACKEND_URL;
 const StatsScreen = () => (
   <View style={styles.screen}>
     <Text style={styles.screenText}>Stats Page</Text>

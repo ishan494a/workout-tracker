@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
-
+import Constants from 'expo-constants';
+const BACKEND_URL = Constants.expoConfig.extra.BACKEND_URL;
 interface WorkoutScreenProps {
   route: any;
   navigation: any;

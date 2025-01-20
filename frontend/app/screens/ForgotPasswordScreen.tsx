@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, TextInput, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import Constants from 'expo-constants';
+const BACKEND_URL = null;
 
 type RootStackParamList = {
   Login: undefined;
@@ -20,7 +22,7 @@ const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
   const handleForgotPassword = async () => {
     setIsLoading(true); // Start loading
     try {
-      const res = await fetch('http://192.168.2.19:8080/auth/login', {
+      const res = await fetch(`${BACKEND_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

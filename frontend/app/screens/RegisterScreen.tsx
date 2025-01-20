@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { View, TextInput, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import Validator from '../utils/Validator';
 import { StackNavigationProp } from '@react-navigation/stack';
-
+import Constants from 'expo-constants';
+const BACKEND_URL = Constants.expoConfig.extra.BACKEND_URL;
 type RootStackParamList = {
   Login: undefined;
   HomeScreen: undefined;
@@ -36,7 +37,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
 
     setIsLoading(true);
     try {
-      const res = await fetch('http://192.168.2.19:8080/auth/register', {
+      const res = await fetch(`${BACKEND_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

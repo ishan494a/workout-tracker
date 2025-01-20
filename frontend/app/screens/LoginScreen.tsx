@@ -3,6 +3,8 @@ import { View, TextInput, Text, TouchableOpacity, StyleSheet, ActivityIndicator 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Validator from '../utils/Validator.js';
 import { StackNavigationProp } from '@react-navigation/stack';
+import Constants from 'expo-constants';
+const BACKEND_URL = Constants.expoConfig.extra.BACKEND_URL;
 
 type RootStackParamList = {
   Login: undefined;
@@ -20,24 +22,24 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false); // Add loading state
-
+  
   const handleLogin = async () => {
     const usernameError = Validator.validateInput(username, 'username');
-    
     if (usernameError) {
       setErrorMessage(usernameError);
       return;
     }
-    
     setIsLoading(true); 
     try {
-      const res = await fetch('http://192.168.2.19:8080/auth/login', {
+      
+      const res = await fetch(`${BACKEND_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username, password }),
       });
+
       if (res.ok) {
         const data = await res.json();
         const { token } = data;

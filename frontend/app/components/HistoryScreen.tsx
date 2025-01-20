@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-
+import Constants from 'expo-constants';
+const BACKEND_URL = Constants.expoConfig.extra.BACKEND_URL;
 const HistoryScreen = () => (
   <View style={styles.screen}>
     <Text style={styles.screenText}>History Page</Text>
