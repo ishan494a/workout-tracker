@@ -9,11 +9,18 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "extra": {
-      "BACKEND_URL": "http://34.60.244.184:8080",
-      "APP_ENV": "development"
+      "BACKEND_URL": "http://192.168.2.19:8080",
+      "APP_ENV": "development",
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "c3d58b31-7fb4-4a4a-b53b-87dae25f96d3"
+      }
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ishan494a.flare"
     },
     "android": {
       "adaptiveIcon": {
@@ -24,7 +31,10 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/AppIcon~ios-marketing.png"
+      "favicon": "./assets/images/AppIcon~ios-marketing.png",
+      "http": {
+        "protocol": "http"
+      }
     },
     "plugins": [
       "expo-router",
@@ -40,6 +50,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/c3d58b31-7fb4-4a4a-b53b-87dae25f96d3"
+    },
+    "owner": "ishan494a"
   }
 }
