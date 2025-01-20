@@ -10,8 +10,7 @@
     "newArchEnabled": true,
     "extra": {
       "BACKEND_URL": "http://34.60.244.184:8080",
-      "DEV_URL": "http://192.168.2.19:8080",
-      "APP_ENV": "PROD"
+      "APP_ENV": "development"
     },
     "ios": {
       "supportsTablet": true

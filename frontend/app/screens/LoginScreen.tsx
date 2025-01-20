@@ -22,7 +22,6 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false); // Add loading state
-  
   const handleLogin = async () => {
     const usernameError = Validator.validateInput(username, 'username');
     if (usernameError) {
